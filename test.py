@@ -7,7 +7,7 @@ from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver import Firefox
 
 
-class UntitledTestCase(unittest.TestCase):
+class TestAddGroup(unittest.TestCase):
 
     def setUp(self):
         self.wd = Firefox(executable_path=GeckoDriverManager().install())
