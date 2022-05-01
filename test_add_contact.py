@@ -5,7 +5,7 @@ from contact import Contact
 import pytest
 
 
-@pytest.fixture()
+@pytest.fixture
 def app(request):
     fixture = Application()
     request.addfinalizer(fixture.destroy)
