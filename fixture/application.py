@@ -37,7 +37,6 @@ class Application:
 
     def open_group_page(self):
         wd = self.wd
-
         wd.find_element_by_link_text("groups").click()
 
     def login(self, username, password):
