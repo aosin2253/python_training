@@ -1,4 +1,6 @@
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 class ContactHelper:
@@ -27,6 +29,28 @@ class ContactHelper:
         self.get_anniversary(contact)
         wd.find_element_by_name("address2").send_keys(contact.address2)
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+
+    def delete_first_contact(self):
+        wd = self.app.wd
+        # select first contact
+        wd.find_element_by_name("selected[]").click()
+        # submit deletion
+        wd.find_element_by_css_selector("input[value='Delete']").click()
+        WebDriverWait(wd, 10).until(EC.alert_is_present())
+        wd.switch_to.alert.accept()
+
+    def modify_first_contact(self, contact):
+        wd = self.app.wd
+        # select first contact
+        wd.find_element_by_name("selected[]").click()
+        # edit contact
+        wd.find_element_by_css_selector('img[alt="Edit"]:first-of-type').click()
+        wd.find_element_by_name("firstname").clear()
+        wd.find_element_by_name("firstname").send_keys(contact.first_name)
+        wd.find_element_by_name("lastname").clear()
+        wd.find_element_by_name("lastname").send_keys(contact.last_name)
+        # update contact firstname and lastname
+        wd.find_element_by_name("update").click()
 
     def get_birthday(self, contact):
         wd = self.app.wd
