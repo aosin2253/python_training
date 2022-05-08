@@ -1,6 +1,4 @@
 from selenium.webdriver.support.select import Select
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 
 class ContactHelper:
@@ -34,23 +32,24 @@ class ContactHelper:
         wd = self.app.wd
         # select first contact
         wd.find_element_by_name("selected[]").click()
+        self.open_contact_page()
         # submit deletion
         wd.find_element_by_css_selector("input[value='Delete']").click()
-        WebDriverWait(wd, 10).until(EC.alert_is_present())
-        wd.switch_to.alert.accept()
+        self.return_to_home_page()
 
-    def modify_first_contact(self, contact):
+    def modify_first_contact(self, name, lastname):
         wd = self.app.wd
         # select first contact
         wd.find_element_by_name("selected[]").click()
         # edit contact
-        wd.find_element_by_css_selector('img[alt="Edit"]:first-of-type').click()
+        self.open_contact_page()
         wd.find_element_by_name("firstname").clear()
-        wd.find_element_by_name("firstname").send_keys(contact.first_name)
+        wd.find_element_by_name("firstname").send_keys(name)
         wd.find_element_by_name("lastname").clear()
-        wd.find_element_by_name("lastname").send_keys(contact.last_name)
+        wd.find_element_by_name("lastname").send_keys(lastname)
         # update contact firstname and lastname
         wd.find_element_by_name("update").click()
+        self.return_to_home_page()
 
     def get_birthday(self, contact):
         wd = self.app.wd
@@ -63,3 +62,11 @@ class ContactHelper:
         Select(wd.find_element_by_name("aday")).select_by_visible_text(contact.aday)
         Select(wd.find_element_by_name("amonth")).select_by_visible_text(contact.amonth)
         wd.find_element_by_name("ayear").send_keys(contact.ayear)
+
+    def open_contact_page(self):
+        wd = self.app.wd
+        wd.find_element_by_css_selector('img[alt="Edit"]:first-of-type').click()
+
+    def return_to_home_page(self):
+        wd = self.app.wd
+        wd.find_element_by_link_text("home").click()
