@@ -19,5 +19,12 @@ class Application:
         wd = self.wd
         wd.get("http://localhost:8080/addressbook/")
 
+    def is_valid(self):
+        try:
+            self.wd.current_url
+            return True
+        except:
+            return False
+
     def destroy(self):
         self.wd.quit()
