@@ -77,3 +77,7 @@ class ContactHelper:
             Select(wd.find_element_by_name(field_month)).select_by_visible_text(str(month))
             wd.find_element_by_name(field_year).clear()
             wd.find_element_by_name(field_year).send_keys(year)
+
+    def count(self):
+        wd = self.app.wd
+        return len(wd.find_elements_by_name("selected[]"))
