@@ -31,7 +31,7 @@ class SessionHelper:
                 return
             else:
                 self.logout()
-            self.login(username, password)
+        self.login(username, password)
 
     def is_logged_in_as(self, username):
         wd = self.app.wd
