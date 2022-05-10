@@ -19,7 +19,7 @@ class ContactHelper:
         self.open_contact_page()
         # submit deletion
         wd.find_element_by_css_selector("input[value='Delete']").click()
-        self.return_to_home_page()
+        self.open_home_page()
 
     def modify_first_contact(self, new_group_data):
         wd = self.app.wd
@@ -28,13 +28,13 @@ class ContactHelper:
         self.open_contact_page()
         self.fill_contact_form(new_group_data)
         wd.find_element_by_name("update").click()
-        self.return_to_home_page()
+        self.open_home_page()
 
     def open_contact_page(self):
         wd = self.app.wd
         wd.find_element_by_css_selector('img[alt="Edit"]:first-of-type').click()
 
-    def return_to_home_page(self):
+    def open_home_page(self):
         wd = self.app.wd
         wd.find_element_by_link_text("home").click()
 
@@ -80,4 +80,5 @@ class ContactHelper:
 
     def count(self):
         wd = self.app.wd
+        self.open_home_page()
         return len(wd.find_elements_by_name("selected[]"))
