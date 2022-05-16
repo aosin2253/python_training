@@ -36,7 +36,8 @@ class ContactHelper:
 
     def open_home_page(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home").click()
+        if not wd.current_url.endswith("/"):
+            wd.find_element_by_link_text("home").click()
 
     def fill_contact_form(self, contact):
         self.change_field_value(field_name="firstname", text=contact.first_name)

@@ -10,7 +10,6 @@ def app():
     global fixture
     if fixture is None:
         fixture = Application()
-        fixture.session.login(username="admin", password="secret")
     else:
         if not fixture.is_valid():
             fixture = Application()
