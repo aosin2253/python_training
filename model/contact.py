@@ -1,3 +1,4 @@
+
 class Contact:
 
     def __init__(self, first_name=None, middle_name=None, last_name=None, nickname=None, title=None, company=None,
@@ -25,3 +26,10 @@ class Contact:
         self.amonth = amonth
         self.ayear = ayear
         self.address2 = address2
+        self.id = id
+
+    def __repr__(self):
+        return "%s:%s" % (self.first_name, self.last_name)
+
+    def __eq__(self, other):
+        return self.last_name == other.last_name and self.first_name == other.first_name

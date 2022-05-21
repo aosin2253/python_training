@@ -4,11 +4,11 @@ from model.contact import Contact
 
 
 def test_add_contact(app):
-
-    app.contact.add(Contact(
+    old_contacts = app.contact.get_contact_list()
+    contact = Contact(
         first_name="Anna",
         middle_name="Magda",
-        last_name="Os",
+        last_name="J",
         nickname="aosin",
         title="test",
         company="Test",
@@ -27,4 +27,10 @@ def test_add_contact(app):
         amonth="January",
         ayear="2000",
         address2="Lesna 2"
-    ))
+    )
+    app.contact.add(contact=contact)
+    new_contacts = app.contact.get_contact_list()
+    assert len(old_contacts) + 1 == len(new_contacts)
+    old_contacts.append(contact)
+
+    assert sorted(old_contacts, key=lambda x: x.last_name) == new_contacts
