@@ -13,6 +13,7 @@ class ContactHelper:
         wd.find_element_by_link_text("add new").click()
         self.fill_contact_form(contact)
         wd.find_element_by_xpath("//div[@id='content']/form/input[21]").click()
+        self.contact_cache = None
 
     def delete_first_contact(self):
         wd = self.app.wd
@@ -22,6 +23,7 @@ class ContactHelper:
         # submit deletion
         wd.find_element_by_css_selector("input[value='Delete']").click()
         self.open_home_page()
+        self.contact_cache = None
 
     def modify_first_contact(self, new_group_data):
         wd = self.app.wd
@@ -31,6 +33,7 @@ class ContactHelper:
         self.fill_contact_form(new_group_data)
         wd.find_element_by_name("update").click()
         self.open_home_page()
+        self.contact_cache = None
 
     def open_contact_page(self):
         wd = self.app.wd
@@ -86,13 +89,15 @@ class ContactHelper:
         self.open_home_page()
         return len(wd.find_elements_by_name("selected[]"))\
 
+    contact_cache = None
 
     def get_contact_list(self):
-        wd = self.app.wd
-        self.open_home_page()
-        contacts = []
-        for element in wd.find_elements_by_css_selector("tbody tr[name='entry']"):
-            last_name = element.find_element_by_css_selector("td:nth-of-type(2)").text
-            first_name = element.find_element_by_css_selector("td:nth-of-type(3)").text
-            contacts.append(Contact(last_name=last_name, first_name=first_name))
-        return contacts
+        if self.contact_cache is None:
+            wd = self.app.wd
+            self.open_home_page()
+            self.contact_cache = []
+            for element in wd.find_elements_by_css_selector("tbody tr[name='entry']"):
+                last_name = element.find_element_by_css_selector("td:nth-of-type(2)").text
+                first_name = element.find_element_by_css_selector("td:nth-of-type(3)").text
+                self.contact_cache.append(Contact(last_name=last_name, first_name=first_name))
+        return list(self.contact_cache)
