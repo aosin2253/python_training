@@ -99,5 +99,6 @@ class ContactHelper:
             for element in wd.find_elements_by_css_selector("tbody tr[name='entry']"):
                 last_name = element.find_element_by_css_selector("td:nth-of-type(2)").text
                 first_name = element.find_element_by_css_selector("td:nth-of-type(3)").text
-                self.contact_cache.append(Contact(last_name=last_name, first_name=first_name))
+                id = element.find_element_by_name('selected[]').get_attribute("id")
+                self.contact_cache.append(Contact(last_name=last_name, first_name=first_name, id=id))
         return list(self.contact_cache)
