@@ -16,18 +16,24 @@ class ContactHelper:
         self.contact_cache = None
 
     def delete_first_contact(self):
+        self.delete_contact_by_index(0)
+
+    def delete_contact_by_index(self, index):
         wd = self.app.wd
-        # select first contact
-        wd.find_element_by_name("selected[]").click()
+        # select contact by index
+        self.select_contact_by_index(index)
         self.open_contact_page()
         # submit deletion
         wd.find_element_by_css_selector("input[value='Delete']").click()
         self.open_home_page()
         self.contact_cache = None
 
-    def modify_first_contact(self, new_group_data):
+    def modify_first_contact(self):
+        self.modify_contact_by_index(0)
+
+    def modify_contact_by_index(self, index, new_group_data):
         wd = self.app.wd
-        self.select_first_contact()
+        self.select_contact_by_index(index)
         # edit contact
         self.open_contact_page()
         self.fill_contact_form(new_group_data)
@@ -76,6 +82,10 @@ class ContactHelper:
         wd = self.app.wd
         wd.find_element_by_name("selected[]").click()
 
+    def select_contact_by_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_name("selected[]")[index].click()
+
     def changed_date(self, day, month, year, field_day, field_month, field_year):
         wd = self.app.wd
         if year is not None:
@@ -87,7 +97,7 @@ class ContactHelper:
     def count(self):
         wd = self.app.wd
         self.open_home_page()
-        return len(wd.find_elements_by_name("selected[]"))\
+        return len(wd.find_elements_by_name("selected[]"))
 
     contact_cache = None
 
@@ -99,6 +109,6 @@ class ContactHelper:
             for element in wd.find_elements_by_css_selector("tbody tr[name='entry']"):
                 last_name = element.find_element_by_css_selector("td:nth-of-type(2)").text
                 first_name = element.find_element_by_css_selector("td:nth-of-type(3)").text
-                id = element.find_element_by_name('selected[]').get_attribute("id")
+                id = element.find_element_by_name('selected[]').get_attribute("value")
                 self.contact_cache.append(Contact(last_name=last_name, first_name=first_name, id=id))
         return list(self.contact_cache)
