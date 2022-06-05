@@ -1,4 +1,7 @@
+
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 from model.contact import Contact
 
@@ -21,33 +24,38 @@ class ContactHelper:
     def delete_contact_by_index(self, index):
         wd = self.app.wd
         # select contact by index
+        self.open_home_page()
         self.select_contact_by_index(index)
-        self.open_contact_page()
         # submit deletion
         wd.find_element_by_css_selector("input[value='Delete']").click()
-        self.open_home_page()
+        WebDriverWait(wd, 10).until(EC.alert_is_present())
+        wd.switch_to.alert.accept()
         self.contact_cache = None
 
-    def modify_first_contact(self):
-        self.modify_contact_by_index(0)
+    def modify_first_contact(self, data):
+        self.modify_contact_by_index(0, data)
 
     def modify_contact_by_index(self, index, new_group_data):
         wd = self.app.wd
-        self.select_contact_by_index(index)
-        # edit contact
-        self.open_contact_page()
+        self.open_contact_to_edit_by_index(index)
         self.fill_contact_form(new_group_data)
         wd.find_element_by_name("update").click()
-        self.open_home_page()
         self.contact_cache = None
+
+    def open_contact_to_edit_by_index(self, index):
+        wd = self.app.wd
+        self.open_home_page()
+        row = wd.find_elements_by_name("entry")[index]
+        cell = row.find_elements_by_tag_name("td")[7]
+        cell.find_element_by_tag_name("a").click()
 
     def open_contact_page(self):
         wd = self.app.wd
-        wd.find_element_by_css_selector('img[alt="Edit"]:first-of-type').click()
+        wd.find_element_by_css_selector('img[alt="Edit"]').click()
 
     def open_home_page(self):
         wd = self.app.wd
-        if not wd.current_url.endswith("/"):
+        if not wd.current_url.endswith("/addressbook.php"):
             wd.find_element_by_link_text("home").click()
 
     def fill_contact_form(self, contact):
@@ -106,9 +114,10 @@ class ContactHelper:
             wd = self.app.wd
             self.open_home_page()
             self.contact_cache = []
-            for element in wd.find_elements_by_css_selector("tbody tr[name='entry']"):
-                last_name = element.find_element_by_css_selector("td:nth-of-type(2)").text
-                first_name = element.find_element_by_css_selector("td:nth-of-type(3)").text
-                id = element.find_element_by_name('selected[]').get_attribute("value")
-                self.contact_cache.append(Contact(last_name=last_name, first_name=first_name, id=id))
+            for row in wd.find_elements_by_name("entry"):
+                cells = row.find_elements_by_tag_name("td")
+                first_name = cells[2].text
+                last_name = cells[1].text
+                id = cells[0].find_element_by_tag_name("input").get_attribute("value")
+                self.contact_cache.append(Contact(first_name=first_name, last_name=last_name, id=id))
         return list(self.contact_cache)

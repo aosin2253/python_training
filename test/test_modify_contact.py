@@ -4,13 +4,13 @@ from model.contact import Contact
 
 
 def test_modify_first_name_contact(app):
-    contact = Contact(first_name="Katarzyna", last_name="Nowak")
     if app.contact.count() == 0:
-        app.contact.add(contact)
+        app.contact.add(Contact(first_name="Katarzyna"))
     old_contacts = app.contact.get_contact_list()
     index = randrange(len(old_contacts))
+    contact = Contact(first_name="Patrycja")
     contact.id = old_contacts[index].id
-    contact.first_name = "Paulina"
+    contact.last_name = old_contacts[index].last_name
     app.contact.modify_contact_by_index(index, contact)
     new_contacts = app.contact.get_contact_list()
     assert len(old_contacts) == app.contact.count()
@@ -25,8 +25,9 @@ def test_modify_last_name_contact(app):
         app.contact.add(contact)
     old_contacts = app.contact.get_contact_list()
     index = randrange(len(old_contacts))
-    contact.last_name = 'Nowak'
+    contact = Contact( last_name="Nowak")
     contact.id = old_contacts[index].id
+    contact.first_name = old_contacts[index].first_name
     app.contact.modify_contact_by_index(index, contact)
     new_contacts = app.contact.get_contact_list()
     assert len(old_contacts) == app.contact.count()
