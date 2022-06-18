@@ -85,6 +85,7 @@ class ContactHelper:
         self.changed_date(field_day="aday", field_month="amonth", field_year="ayear",
                           day=contact.aday, month=contact.amonth, year=contact.ayear)
         self.change_field_value(field_name="address2", text=contact.address2)
+        self.change_field_value(field_name="phone2", text=contact.secondary_phone)
 
     def change_field_value(self, text, field_name):
         wd = self.app.wd
